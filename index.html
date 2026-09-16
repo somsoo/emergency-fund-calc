@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 
 <html lang="ko">
-<head><link href="favicon.ico" rel="icon" type="image/x-icon"/><link href="apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
+<head>
+    <!-- Performance Optimization: Resource Preconnect -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="favicon.ico" rel="icon" type="image/x-icon"/><link href="apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>월 생활비 기반 6개월 적정 비상금 견적기 | 내 소득 맞춤 비상금 시뮬레이터</title>
@@ -87,7 +92,18 @@
     max-width: 100% !important;
     overflow: hidden !important;
   }
-</style>
+
+        /* U3 Accessibility: Global Keyboard Focus Ring Standard */
+        :focus-visible {
+            outline: 2px solid #3b82f6 !important;
+            outline-offset: 2px !important;
+        }
+        input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible {
+            outline: 2px solid #2563eb !important;
+            outline-offset: 1px !important;
+        }
+    
+    </style>
 <meta content="https://emergency-fund-calc.enjoy-onepage.com/og-image.png" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="월 생활비 기반 6개월 적정 비상금 견적기" name="twitter:title"/><meta content="내 월 생활비와 직업 특성에 맞는 최적의 비상금 규모를 1초 만에 확인하세요." name="twitter:description"/><meta content="https://emergency-fund-calc.enjoy-onepage.com/og-image.png" name="twitter:image"/></head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
 <!-- 상단 슬림 띠배너 (헤더 직하단: 50~60px 슬림형) -->
@@ -119,7 +135,7 @@
 <label class="block text-xs font-bold text-slate-700 mb-1">1. 월 필수 고정지출 (원)</label>
 <p class="text-[11px] text-slate-400 mb-1.5">월세, 대출이자, 공과금, 관리비, 정기 보험료 등 숨만 쉬어도 나가는 돈</p>
 <div class="relative">
-<input class="w-full p-3 pr-8 text-right font-bold text-base sm:text-lg border border-slate-200 bg-slate-50 focus:bg-white rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition auto-comma" id="fixedExpense" type="text" value="800,000"/>
+<input class="w-full p-3 pr-8 text-right font-bold text-base sm:text-lg border border-slate-200 bg-slate-50 focus:bg-white rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition auto-comma" id="fixedExpense" type="text" value="800,000" aria-label="Fixedexpense" />
 <span class="absolute right-3 top-3.5 text-slate-400 text-sm font-medium">원</span>
 </div>
 </div>
@@ -128,14 +144,14 @@
 <label class="block text-xs font-bold text-slate-700 mb-1">2. 월 최소 변동 생활비 (원)</label>
 <p class="text-[11px] text-slate-400 mb-1.5">최소 식비, 교통비, 통신비, 생필품비 등 생존에 필수적인 최소 비용</p>
 <div class="relative">
-<input class="w-full p-3 pr-8 text-right font-bold text-base sm:text-lg border border-slate-200 bg-slate-50 focus:bg-white rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition auto-comma" id="variableExpense" type="text" value="1,200,000"/>
+<input class="w-full p-3 pr-8 text-right font-bold text-base sm:text-lg border border-slate-200 bg-slate-50 focus:bg-white rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition auto-comma" id="variableExpense" type="text" value="1,200,000" aria-label="Variableexpense" />
 <span class="absolute right-3 top-3.5 text-slate-400 text-sm font-medium">원</span>
 </div>
 </div>
 <!-- 3. 직업 및 소득 안정성 (권장 개월수 결정) -->
 <div>
 <label class="block text-xs font-bold text-slate-700 mb-1.5">3. 직업 형태 및 소득 안정성</label>
-<select class="w-full p-3 font-semibold text-sm border border-slate-200 bg-slate-50 focus:bg-white rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" id="jobStability">
+<select class="w-full p-3 font-semibold text-sm border border-slate-200 bg-slate-50 focus:bg-white rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" id="jobStability" aria-label="jobStability">
 <option value="3">공무원 / 공기업 / 대기업 (안정 소득형 - 3개월 권장)</option>
 <option selected="" value="6">일반 직장인 / 중소기업 (표준 안전형 - 6개월 표준 권장)</option>
 <option value="9">프리랜서 / 계약직 / 외주 (변동 소득형 - 9개월 권장)</option>
@@ -147,15 +163,15 @@
 <label class="block text-xs font-bold text-slate-700 mb-1.5">4. 비상금 모으기 목표 기간</label>
 <div class="grid grid-cols-3 gap-2">
 <label class="cursor-pointer border border-slate-200 rounded-xl p-2.5 text-center hover:bg-slate-50 transition block">
-<input class="sr-only peer" name="saveMonths" type="radio" value="6"/>
+<input class="sr-only peer" name="saveMonths" type="radio" value="6" aria-label="saveMonths" />
 <div class="peer-checked:text-blue-600 peer-checked:font-bold">6개월 초단기</div>
 </label>
 <label class="cursor-pointer border border-slate-200 rounded-xl p-2.5 text-center hover:bg-slate-50 transition block">
-<input checked="" class="sr-only peer" name="saveMonths" type="radio" value="12"/>
+<input checked="" class="sr-only peer" name="saveMonths" type="radio" value="12" aria-label="saveMonths" />
 <div class="peer-checked:text-blue-600 peer-checked:font-bold">12개월 (1년)</div>
 </label>
 <label class="cursor-pointer border border-slate-200 rounded-xl p-2.5 text-center hover:bg-slate-50 transition block">
-<input class="sr-only peer" name="saveMonths" type="radio" value="24"/>
+<input class="sr-only peer" name="saveMonths" type="radio" value="24" aria-label="saveMonths" />
 <div class="peer-checked:text-blue-600 peer-checked:font-bold">24개월 (2년)</div>
 </label>
 </div>
