@@ -16,14 +16,57 @@
 <meta content="https://emergency-fund-calc.enjoy-onepage.com/" property="og:url"/>
 <!-- Schema.org WebApplication -->
 <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "월 생활비 기반 적정 비상금 견적기",
-    "description": "월 고정지출과 생활비를 바탕으로 안전한 3~12개월 비상금 규모와 월별 저축 플랜을 산출하는 금융 시뮬레이터",
-    "applicationCategory": "FinanceApplication",
-    "operatingSystem": "All"
-  }
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://emergency-fund-calc.enjoy-onepage.com/#webapp",
+      "name": "월 생활비 기반 적정 비상금 견적기",
+      "url": "https://emergency-fund-calc.enjoy-onepage.com/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "description": "월 고정비와 생활비를 기반으로 직업 안정성에 맞춘 3~12개월 적정 비상금 규모와 파킹통장 분산 저축 플랜을 실시간 계산합니다.",
+      "image": "https://emergency-fund-calc.enjoy-onepage.com/og-image.png",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "KRW"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://emergency-fund-calc.enjoy-onepage.com/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "비상금은 예적금이나 주식에 투자하면 안 되나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "절대 안 됩니다. 비상금의 최우선 가치는 '유동성(즉시 인출)'과 '원금보장'입니다. 주식이나 부동산에 묶이면 급전 필요 시 강제 손절 손실을 입게 됩니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "신용카드 한도나 마이너스 통장으로 비상금을 대체해도 되나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "마이너스 통장은 금리 변동 위험과 은행의 한도 축소(만기 연장 거절) 리스크가 있어 진정한 의미의 자산 방어벽이 될 수 없습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "적정 비상금 규모를 달성한 후 초과금은 어떻게 하나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "비상금 바구니가 다 채워진 후 발생하는 잉여 저축액은 전액 연금저축, IRP, ISA 등 장기 복리 투자 파이프라인으로 전환해야 합니다."
+          }
+        }
+      ]
+    }
+  ]
+}
   </script>
 <script src="https://cdn.tailwindcss.com"></script>
 <script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2228289204702106"></script>
