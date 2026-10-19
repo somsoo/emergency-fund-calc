@@ -511,7 +511,7 @@
       const today = new Date();
       const dateEl = document.getElementById('receiptDate');
       if (dateEl) {
-        dateEl.innerText = `DATE: ${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
+        dateEl.textContent = `DATE: ${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
       }
 
       // 복원
