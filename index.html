@@ -143,6 +143,43 @@
   .ad-bottom { min-height: 280px !important; }
   .ad-bottom ins { min-height: 280px !important; }
 </style>
+<style id="emergency-modern-enhancements">
+  /* 2026 Emergency Fund UI Enhancements */
+  .quick-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+  .quick-chip {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    border-radius: 20px;
+    padding: 5px 11px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .quick-chip:hover {
+    background: #e2e8f0;
+    border-color: #94a3b8;
+  }
+  .quick-chip:active {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #1d4ed8;
+  }
+  @media (max-width: 420px) {
+    .quick-chip {
+      padding: 4px 8px;
+      font-size: 0.72rem;
+    }
+  }
+</style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
 <!-- 상단 슬림 띠배너 (헤더 직하단: 50~60px 슬림형) -->
@@ -169,6 +206,16 @@
           </h2>
 <span class="text-xs text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full font-semibold">100% 로컬 연산</span>
 </div>
+<!-- 가구 형태별 원클릭 퀵 프리셋 -->
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1.5">⚡ 가구 형태별 빠른 추천 설정</label>
+<div class="quick-chips" aria-label="가구 형태 프리셋">
+  <button type="button" class="quick-chip" onclick="setHouseholdPreset(600000, 900000, '6')">1인 청년 (월 150만)</button>
+  <button type="button" class="quick-chip" onclick="setHouseholdPreset(900000, 1300000, '6')">1인 표준 (월 220만)</button>
+  <button type="button" class="quick-chip" onclick="setHouseholdPreset(1400000, 1800000, '6')">2인 부부 (월 320만)</button>
+  <button type="button" class="quick-chip" onclick="setHouseholdPreset(2000000, 2500000, '6')">3~4인 가구 (월 450만)</button>
+</div>
+</div>
 <!-- 1. 고정 지출 -->
 <div>
 <label class="block text-xs font-bold text-slate-700 mb-1">1. 월 필수 고정지출 (원)</label>
@@ -176,6 +223,13 @@
 <div class="relative">
 <input class="w-full p-3 pr-8 text-right font-bold text-base sm:text-lg border border-slate-200 bg-slate-50 focus:bg-white rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition auto-comma" id="fixedExpense" type="text" value="800,000" aria-label="Fixedexpense" />
 <span class="absolute right-3 top-3.5 text-slate-400 text-sm font-medium">원</span>
+</div>
+<div class="quick-chips mt-1.5" aria-label="고정지출 빠른 선택">
+  <button type="button" class="quick-chip" onclick="setFixedPreset(500000)">50만</button>
+  <button type="button" class="quick-chip" onclick="setFixedPreset(800000)">80만</button>
+  <button type="button" class="quick-chip" onclick="setFixedPreset(1200000)">120만</button>
+  <button type="button" class="quick-chip" onclick="setFixedPreset(1500000)">150만</button>
+  <button type="button" class="quick-chip" onclick="setFixedPreset(2000000)">200만</button>
 </div>
 </div>
 <!-- 2. 변동 생활비 -->
@@ -185,6 +239,13 @@
 <div class="relative">
 <input class="w-full p-3 pr-8 text-right font-bold text-base sm:text-lg border border-slate-200 bg-slate-50 focus:bg-white rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition auto-comma" id="variableExpense" type="text" value="1,200,000" aria-label="Variableexpense" />
 <span class="absolute right-3 top-3.5 text-slate-400 text-sm font-medium">원</span>
+</div>
+<div class="quick-chips mt-1.5" aria-label="변동생활비 빠른 선택">
+  <button type="button" class="quick-chip" onclick="setVarPreset(700000)">70만</button>
+  <button type="button" class="quick-chip" onclick="setVarPreset(1000000)">100만</button>
+  <button type="button" class="quick-chip" onclick="setVarPreset(1200000)">120만</button>
+  <button type="button" class="quick-chip" onclick="setVarPreset(1500000)">150만</button>
+  <button type="button" class="quick-chip" onclick="setVarPreset(2000000)">200만</button>
 </div>
 </div>
 <!-- 3. 직업 및 소득 안정성 (권장 개월수 결정) -->
@@ -261,16 +322,35 @@
 <span>2차 방어 자금 (단기예금/발행어음):</span>
 <span class="font-bold text-slate-800" id="resTier2">8,000,000원</span>
 </div>
+<div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex mt-2.5 border border-slate-200">
+  <div id="tier1Bar" class="bg-blue-500 h-full transition-all duration-300" style="width: 33%;" title="1차 파킹통장"></div>
+  <div id="tier2Bar" class="bg-indigo-600 h-full transition-all duration-300" style="width: 67%;" title="2차 방어자금"></div>
+</div>
+<div class="flex justify-between text-[10px] text-slate-400 mt-1">
+  <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>1차 파킹통장(CMA)</span>
+  <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-indigo-600 inline-block"></span>2차 정기예금/발행어음</span>
+</div>
 </div>
 <!-- 월 저축 필요액 -->
 <div class="pt-3 pb-1 text-center bg-blue-50/70 p-3 rounded-xl">
 <span class="text-[11px] text-blue-700 font-bold block" id="savingPlanLabel">12개월 내 모으려면?</span>
 <span class="text-lg font-black text-blue-800 font-mono" id="monthlySavingNeeded">매월 1,000,000 원 저축</span>
 </div>
-<!-- 복사 버튼 -->
-<button class="w-full mt-4 py-3 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-md whitespace-nowrap" onclick="copyEmergencyResult()">
-            📋 견적 결과 클립보드 복사하기
-          </button>
+<!-- 액션 툴바 (2x2 그리드) -->
+<div class="grid grid-cols-2 gap-2 mt-4">
+  <button type="button" class="py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md whitespace-nowrap min-h-[44px]" onclick="downloadEmergencyReceiptPNG()">
+    📥 진단서(PNG) 저장
+  </button>
+  <button type="button" class="py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md whitespace-nowrap min-h-[44px]" onclick="copyEmergencyResult()">
+    📋 견적 복사
+  </button>
+  <button type="button" class="py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5 whitespace-nowrap min-h-[44px]" onclick="shareEmergencyResult()">
+    📤 공유하기
+  </button>
+  <button type="button" class="py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5 whitespace-nowrap min-h-[44px]" onclick="resetEmergencyForm()">
+    🔄 초기화
+  </button>
+</div>
 </div>
 
 </section>
@@ -485,6 +565,10 @@
       document.getElementById('resTier1').textContent = `${tier1.toLocaleString()}원 (${tier1Months}개월분)`;
       document.getElementById('resTier2').textContent = `${tier2.toLocaleString()}원 (${months - tier1Months}개월분)`;
 
+      const t1Pct = totalFund > 0 ? Math.round((tier1 / totalFund) * 100) : 33;
+      const b1 = document.getElementById('tier1Bar'); if (b1) b1.style.width = `${t1Pct}%`;
+      const b2 = document.getElementById('tier2Bar'); if (b2) b2.style.width = `${100 - t1Pct}%`;
+
       document.getElementById('savingPlanLabel').textContent = `${targetSaveMonths}개월 내 모으려면?`;
       document.getElementById('monthlySavingNeeded').textContent = `매월 ${monthlySaving.toLocaleString()} 원 저축`;
 
@@ -494,17 +578,232 @@
       localStorage.setItem('ef_months', months);
     }
 
+    function setHouseholdPreset(fixedVal, varVal, monthsVal) {
+      document.getElementById('fixedExpense').value = Number(fixedVal).toLocaleString('ko-KR');
+      document.getElementById('variableExpense').value = Number(varVal).toLocaleString('ko-KR');
+      document.getElementById('jobStability').value = monthsVal;
+      calculateEmergencyFund();
+    }
+
+    function setFixedPreset(val) {
+      document.getElementById('fixedExpense').value = Number(val).toLocaleString('ko-KR');
+      calculateEmergencyFund();
+    }
+
+    function setVarPreset(val) {
+      document.getElementById('variableExpense').value = Number(val).toLocaleString('ko-KR');
+      calculateEmergencyFund();
+    }
+
+    function resetEmergencyForm() {
+      document.getElementById('fixedExpense').value = '800,000';
+      document.getElementById('variableExpense').value = '1,200,000';
+      document.getElementById('jobStability').value = '6';
+      const r12 = document.querySelector('input[name="saveMonths"][value="12"]');
+      if (r12) r12.checked = true;
+      calculateEmergencyFund();
+      if (window.showToastNotification) window.showToastNotification('기본값으로 초기화되었습니다.');
+    }
+
     function copyEmergencyResult() {
       const total = document.getElementById('totalFundDisplay').textContent;
       const expense = document.getElementById('monthlyExpenseDisplay').textContent;
       const saving = document.getElementById('monthlySavingNeeded').textContent;
-      const text = `[적정 비상금 견적 결과]\n최종 비상금 규모: ${total}\n${expense}\n달성 계획: ${saving}\n\n👉 내 맞춤 비상금 계산하기: ${window.location.href}`;
-      
-      navigator.clipboard.writeText(text).then(() => {
-        alert('비상금 견적 결과가 클립보드에 복사되었습니다!');
-      }).catch(() => {
-        alert('복사되었습니다: ' + window.location.href);
-      });
+      const months = document.getElementById('resMonths').textContent;
+      const tier1 = document.getElementById('resTier1').textContent;
+      const tier2 = document.getElementById('resTier2').textContent;
+      const url = window.location.href;
+
+      const text = `[가계 비상예비자금(Emergency Fund) 재무진단 견적서]\n` +
+                   `• 권장 비상금 규모: ${total} (${months})\n` +
+                   `• ${expense}\n` +
+                   `• 1차 유동성(파킹통장/CMA): ${tier1}\n` +
+                   `• 2차 방어자금(정기예금/MMF): ${tier2}\n` +
+                   `• 목표 달성 플랜: ${saving}\n\n` +
+                   `👉 내 맞춤 비상금 직접 진단하기:\n${url}`;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          if (window.showToastNotification) {
+            window.showToastNotification('비상금 진단 견적이 클립보드에 복사되었습니다! 📋');
+          } else {
+            alert('비상금 진단 견적이 클립보드에 복사되었습니다!');
+          }
+        }).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    async function shareEmergencyResult() {
+      const total = document.getElementById('totalFundDisplay').textContent;
+      const months = document.getElementById('resMonths').textContent;
+      const url = window.location.href;
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: '가계 비상예비자금 재무진단서',
+            text: `[비상금 계산기] 내 맞춤 권장 비상금 규모: ${total} (${months})`,
+            url: url
+          });
+        } catch (err) {
+          if (err.name !== 'AbortError') copyEmergencyResult();
+        }
+      } else {
+        copyEmergencyResult();
+      }
+    }
+
+    function downloadEmergencyReceiptPNG() {
+      const fixed = document.getElementById('fixedExpense').value;
+      const variable = document.getElementById('variableExpense').value;
+      const jobEl = document.getElementById('jobStability');
+      const jobText = jobEl.options[jobEl.selectedIndex].text.split('(')[0].trim();
+      const months = document.getElementById('resMonths').textContent;
+      const total = document.getElementById('totalFundDisplay').textContent;
+      const expense = document.getElementById('monthlyExpenseDisplay').textContent;
+      const tier1 = document.getElementById('resTier1').textContent;
+      const tier2 = document.getElementById('resTier2').textContent;
+      const savingLabel = document.getElementById('savingPlanLabel').textContent;
+      const saving = document.getElementById('monthlySavingNeeded').textContent;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 800;
+      canvas.height = 980;
+      const ctx = canvas.getContext('2d');
+
+      // Background
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, 800, 980);
+
+      // Header Gradient
+      const grad = ctx.createLinearGradient(0, 0, 800, 180);
+      grad.addColorStop(0, '#0f172a');
+      grad.addColorStop(1, '#1e293b');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 800, 180);
+
+      // Header Text
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 30px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('💼 가계 비상예비자금 재무진단서', 400, 75);
+
+      ctx.font = '15px sans-serif';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText('월 생활비 기반 맞춤형 안전망 설계 리포트 • emergency-fund-calc.enjoy-onepage.com', 400, 115);
+      const today = new Date().toLocaleDateString('ko-KR');
+      ctx.fillText(`진단 일자: ${today}`, 400, 145);
+
+      // Card 1: Input Profile
+      ctx.fillStyle = '#f8fafc';
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(40, 210, 720, 140, 14);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#334155';
+      ctx.font = 'bold 16px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('📋 가계 지출 및 소득 안전성 프로필', 65, 245);
+
+      ctx.font = '15px sans-serif';
+      ctx.fillStyle = '#475569';
+      ctx.fillText(`• 월 필수 고정지출: ${fixed}원`, 65, 280);
+      ctx.fillText(`• 월 최소 변동생활비: ${variable}원`, 65, 315);
+      ctx.fillText(`• 직업 및 소득군: ${jobText}`, 420, 280);
+      ctx.fillText(`• ${expense}`, 420, 315);
+
+      // Card 2: Hero Total Emergency Fund
+      const heroGrad = ctx.createLinearGradient(40, 375, 760, 510);
+      heroGrad.addColorStop(0, '#0f172a');
+      heroGrad.addColorStop(1, '#1e293b');
+      ctx.fillStyle = heroGrad;
+      ctx.beginPath();
+      ctx.roundRect(40, 375, 720, 135, 14);
+      ctx.fill();
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#93c5fd';
+      ctx.font = 'bold 16px sans-serif';
+      ctx.fillText(`권장 비상예비자금 규모 (${months})`, 400, 415);
+
+      ctx.fillStyle = '#34d399';
+      ctx.font = 'bold 44px monospace';
+      ctx.fillText(total, 400, 475);
+
+      // Card 3: 2-Tier Allocation Strategy
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.beginPath();
+      ctx.roundRect(40, 535, 720, 185, 14);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#1e293b';
+      ctx.font = 'bold 16px sans-serif';
+      ctx.fillText('🏦 2단계 안전 분산 보관 전략', 65, 570);
+
+      ctx.font = '15px sans-serif';
+      ctx.fillStyle = '#2563eb';
+      ctx.fillText(`1차 유동성 자금 (CMA / 수시입출금 파킹통장)`, 65, 608);
+      ctx.textAlign = 'right';
+      ctx.font = 'bold 15px monospace';
+      ctx.fillStyle = '#1e293b';
+      ctx.fillText(tier1, 735, 608);
+
+      ctx.textAlign = 'left';
+      ctx.font = '15px sans-serif';
+      ctx.fillStyle = '#4f46e5';
+      ctx.fillText(`2차 방어 자금 (정기예금 / MMF / 발행어음)`, 65, 650);
+      ctx.textAlign = 'right';
+      ctx.font = 'bold 15px monospace';
+      ctx.fillStyle = '#1e293b';
+      ctx.fillText(tier2, 735, 650);
+
+      // Card 4: Monthly Saving Target
+      ctx.fillStyle = '#eff6ff';
+      ctx.strokeStyle = '#bfdbfe';
+      ctx.beginPath();
+      ctx.roundRect(40, 740, 720, 100, 14);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#1d4ed8';
+      ctx.font = 'bold 15px sans-serif';
+      ctx.fillText(`🎯 ${savingLabel}`, 400, 775);
+
+      ctx.font = 'bold 24px monospace';
+      ctx.fillStyle = '#1e40af';
+      ctx.fillText(saving, 400, 815);
+
+      // Golden rules footer
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillRect(40, 860, 720, 85);
+      ctx.textAlign = 'center';
+      ctx.font = '13px sans-serif';
+      ctx.fillStyle = '#64748b';
+      ctx.fillText('💡 비상금 3대 황금 원칙: ① 주식/코인 투자 금지  ② 순수 생존비용 기준  ③ 전용 통장 분리', 400, 895);
+      ctx.font = '12px sans-serif';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText('본 진단서는 모의 계산용이며 금융기관 가입 기준에 따라 상이할 수 있습니다. • emergency-fund-calc.enjoy-onepage.com', 400, 925);
+
+      // Download PNG
+      const a = document.createElement('a');
+      a.download = `비상금_재무진단서_${Date.now()}.png`;
+      a.href = canvas.toDataURL('image/png');
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      if (window.showToastNotification) {
+        window.showToastNotification('비상금 재무진단서(PNG)가 저장되었습니다! 📥');
+      }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
